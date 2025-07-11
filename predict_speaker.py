@@ -44,5 +44,5 @@ with torch.no_grad():
 
 # ---------- 8. Map Prediction to Speaker Name ----------
 predicted_speaker = idx_to_speaker[pred_idx]
-print(f"🔊 Predicted speaker index: {pred_idx} → Name: {predicted_speaker}")
+print(f" Predicted speaker index: {pred_idx} → Name: {predicted_speaker}")
 
