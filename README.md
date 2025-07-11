@@ -1,4 +1,4 @@
-r# 🎙️ Speaker Identification using X-Vector in PyTorch
+# Speaker Identification using X-Vector in PyTorch
 
 This project performs **speaker classification** using an X-vector architecture built with **PyTorch** and **Torchaudio**. The model is trained on MFCC features extracted from `.wav` audio files.
 
