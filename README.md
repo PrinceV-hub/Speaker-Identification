@@ -39,10 +39,10 @@ source venv/bin/activate      # for Linux/macOS
 venv\Scripts\activate.bat     # for Windows
 ```
 
-### 3. Install dependencies
+### 3. Download dependencies
 
 ```bash
-pip install -r requirements.txt
+from requirements.txt
 ```
 
 ### 4. Train the Model
