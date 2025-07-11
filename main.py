@@ -18,7 +18,7 @@ random.seed(42)
 np.random.seed(42)
 torch.manual_seed(42)
 
-# 🧪 Visualize MFCC (Optional)
+#  Visualize MFCC (Optional)
 def show_mfcc(path, n_mfcc=30):
     wav, sr = torchaudio.load(path)
     wav = wav.mean(dim=0, keepdim=True)
@@ -33,7 +33,7 @@ def show_mfcc(path, n_mfcc=30):
     plt.tight_layout()
     plt.show()
 
-# ✅ Dataset Preparation
+#  Dataset Preparation
 data_root = './audio'  # put absolute path if needed
 train_files, test_files, train_labels, test_labels = [], [], [], []
 
@@ -54,7 +54,7 @@ for spk in speakers:
 print("Speaker Label Mapping:", speaker2idx)
 print(f"Total Training Files: {len(train_files)} | Testing Files: {len(test_files)}")
 
-# ✅ Dataset Class
+# Dataset Class
 class SpeakerDataset(Dataset):
     def __init__(self, file_list, labels, sample_rate=16000, n_mfcc=30):
         self.file_list = file_list
@@ -75,7 +75,7 @@ class SpeakerDataset(Dataset):
         mfcc = torchaudio.transforms.MFCC(sample_rate=self.sr, n_mfcc=self.n_mfcc)(wav)
         return mfcc.squeeze(0).transpose(0,1), label
 
-# ✅ X-Vector Model
+#  X-Vector Model
 class XVectorNet(nn.Module):
     def __init__(self, n_mfcc=30, hidden_dim=512, embedding_size=256, num_speakers=2):
         super().__init__()
@@ -103,7 +103,7 @@ class XVectorNet(nn.Module):
         out = self.classifier(F.relu(embed))
         return out, embed
 
-# ✅ DataLoader & Setup
+# DataLoader & Setup
 train_ds = SpeakerDataset(train_files, train_labels)
 test_ds = SpeakerDataset(test_files, test_labels)
 train_loader = DataLoader(train_ds, batch_size=16, shuffle=True)
@@ -114,10 +114,10 @@ model = XVectorNet(n_mfcc=30, num_speakers=len(speakers)).to(device)
 #model = XVectorNet(n_mfcc=30, num_speakers=len(speakers)).to(device)
 #model.load_state_dict(torch.load('xvector_model_weights.pt', map_location=device))
 #model.eval()
-print("✅ Loaded model weights from xvector_model_weights.pt")
+print(" Loaded model weights from xvector_model_weights.pt")
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-# ✅ Training
+#  Training
 if __name__ == "__main__":
     epochs = 50
     for epoch in range(epochs):
@@ -133,13 +133,13 @@ if __name__ == "__main__":
             optimizer.step()
             running_loss += loss.item()
             loop.set_postfix(loss=loss.item())
-        print(f"✅ Epoch {epoch+1} avg loss: {running_loss/len(train_loader):.4f}")
+        print(f" Epoch {epoch+1} avg loss: {running_loss/len(train_loader):.4f}")
 
-    # ✅ Save trained weights
+    #  Save trained weights
     torch.save(model.state_dict(), 'xvector_model_weights.pt')
-    print("✅ Model weights saved to xvector_model_weights.pt")
+    print(" Model weights saved to xvector_model_weights.pt")
 
-    # ✅ Evaluation
+    #  Evaluation
     model.eval()
     all_preds, all_targets = [], []
     with torch.no_grad():
@@ -151,9 +151,9 @@ if __name__ == "__main__":
             all_targets.extend(y.numpy().tolist())
 
     acc = accuracy_score(all_targets, all_preds)
-    print(f"\n🎯 Test Accuracy: {acc*100:.2f}%")
+    print(f"\n Test Accuracy: {acc*100:.2f}%")
 
-    # ✅ Inference
+    #  Inference
     idx2speaker = {i: spk for spk, i in speaker2idx.items()}
 
     def predict_speaker(model, wav_path):
@@ -165,8 +165,7 @@ if __name__ == "__main__":
         with torch.no_grad():
             logits, _ = model(x)
             pred = torch.argmax(logits, dim=1).item()
-        print(f"🔊 Predicted speaker index: {pred} → Name: {idx2speaker[pred]}")
+        print(f" Predicted speaker index: {pred} → Name: {idx2speaker[pred]}")
 
-    # ✅ Example usage (change path accordingly)
-    predict_speaker(model, './audio/Jens_Stoltenberg/120.wav')
+    
 
